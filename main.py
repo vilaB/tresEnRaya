@@ -45,12 +45,8 @@ def imprimir_tablero(tablero, extremos=False):
         columna=0
     print("")
 
-def crear_tablero():
-    while True:
-        alto = int(input("Indica el alto\n>"))
-        ancho = int(input("Indica el ancho\n>"))
-        if alto > 0 and ancho > 0:
-            break
+def crear_tablero(alto=3, ancho=3):
+
     tablero = []
     numeroCasilla=1
     for i in range(alto):
@@ -86,15 +82,71 @@ def colocar_ficha(tablero, jugador):
             print("Esta casilla ya está cogida, elige otra!")
             continue
         tablero[fila][casilla - (fila * len(tablero[0]))] = jugador[0]
+
         #Comprobar si ganamos
-        
-        break
+        final = hay_ganador(tablero)
+        if final != None:
+            imprimir_tablero(tablero, extremos=True)
+            print("Tenemos ganador!" + " El jugador " + jugador + " ha ganado!")
+            return True
+        return False
 
-def ha_ganado(tablero, casilla):
+#Podria pasarse la casilla y comprobar solo si esta provoca que alguien gane
+#Más eficiente
+def hay_ganador(tablero):
+    #filas
+    for linea in tablero:
+        iguales = True                                          #Asumimos que todos en la linea son iguales
+        for i in range(1,3):
+            if linea[i-1] != linea[i]:                          #Comprobamos entre pares
+                iguales = False
+                break                                           #Si alguno es distinto deja de mirar la linea
+        if iguales:
+            return linea[0]                               #Devuelve el ganador, pues es cualquiera de esta linea
+    #Columnas
+    #Basicamente hacemos la traspuesta y la misma operación que antes
+    tableroAux = []
+    for i in range(len(tablero[0])):
+        tableroAux.append([])
+        for j in range(len(tablero)):
+            tableroAux[len(tableroAux)-1].append(tablero[j][i])
+    for linea in tableroAux:
+        iguales = True                                          #Asumimos que todos en la linea son iguales
+        for i in range(1,3):
+            if linea[i-1] != linea[i]:                          #Comprobamos entre pares
+                iguales = False
+                break                                           #Si alguno es distinto deja de mirar la linea
+        if iguales:
+            return linea[0]
+    #Diagonales
+    tableroAux = []
+    tableroAux.append([])
+    tableroAux[0].append(tablero[0][0])
+    tableroAux[0].append(tablero[1][1])
+    tableroAux[0].append(tablero[2][2])
 
+    tableroAux.append([])
+    tableroAux[1].append(tablero[0][2])
+    tableroAux[1].append(tablero[1][1])
+    tableroAux[1].append(tablero[2][0])
+    for linea in tableroAux:
+        iguales = True                                          #Asumimos que todos en la linea son iguales
+        for i in range(1,3):
+            if linea[i-1] != linea[i]:                          #Comprobamos entre pares
+                iguales = False
+                break                                           #Si alguno es distinto deja de mirar la linea
+        if iguales:
+            return linea[0]
+
+    return None
 
 def juego():
     #Iniciando el juego
+    #while True:
+    #    alto = int(input("Indica el alto\n>"))
+    #    ancho = int(input("Indica el ancho\n>"))
+    #    if alto > 0 and ancho > 0:
+    #        break
     tablero = crear_tablero()
     imprimir_tablero(tablero, extremos=True)
     j1,j2 = elegir_nombres()
@@ -105,8 +157,10 @@ def juego():
     jugador_actual = j1
     en_juego=True
     while en_juego:
-        colocar_ficha(tablero, jugador_actual)
+        final = colocar_ficha(tablero, jugador_actual)
 
+        if final:
+            break
         if jugador_actual == j1:
             jugador_actual = j2
         else:
