@@ -1,9 +1,10 @@
 
 
-
+#Imprime el tablero, extremos es una opción visual
 def imprimir_tablero(tablero, extremos=False):
     fila=0
     columna=0
+    #Imprimimos linea a linea
     for linea in tablero:
         #Linea de huecos 1
         if fila != 0:
@@ -45,6 +46,7 @@ def imprimir_tablero(tablero, extremos=False):
         columna=0
     print("")
 
+#Crea el tablero con el ancho y alto indicados
 def crear_tablero(alto=3, ancho=3):
 
     tablero = []
@@ -56,6 +58,7 @@ def crear_tablero(alto=3, ancho=3):
             numeroCasilla+=1
     return tablero
 
+#Permite elegir nombres a los jugadores
 def elegir_nombres():
     while True:
         jugador_1 = input("Nombre del jugador 1:\n>")
@@ -68,6 +71,7 @@ def elegir_nombres():
     return jugador_1,jugador_2
 
 import math
+#Colocar una flecha ene l tablero
 def colocar_ficha(tablero, jugador):
     while True:
         imprimir_tablero(tablero, extremos=True)
@@ -93,6 +97,7 @@ def colocar_ficha(tablero, jugador):
 
 #Podria pasarse la casilla y comprobar solo si esta provoca que alguien gane
 #Más eficiente
+#Detecta si alguien ha ganado la partida
 def hay_ganador(tablero):
     #filas
     for linea in tablero:
